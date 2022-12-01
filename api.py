@@ -1,7 +1,5 @@
 import json.decoder
-import os
 import requests as re
-from settings import email, password
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 
@@ -10,6 +8,8 @@ class Petfriends:
         self.base_url = 'https://petfriends.skillfactory.ru'
 
     def get_api_key(self, email: str, password: str) -> json:
+        """Функция принимает на вход валидные email и пароль и возвращает
+        api ключ!"""
         headers = {
             'email': email,
             'password': password,
@@ -23,6 +23,8 @@ class Petfriends:
         return status, result
 
     def get_list_of_pets(self, api_key: json, filter: str) -> json:
+        """Функция принимает на вход api ключ и значение фильтра
+         и возвращает статус-код ответа и список питомцев."""
         headers = {'auth_key': api_key['key']}
         filter = {'filter': filter}
 
@@ -35,6 +37,8 @@ class Petfriends:
         return status, result
 
     def add_new_pet(self, auth_key: json, name: str, animal_type: str, age: str, pet_photo: str) -> json:
+        """Функция принимает на вход параметры нового питомца и добавляет новую запись в список питомцев.
+        На выходе фукция возвращает статус-код и словарь со значениями нового питомца."""
         data = MultipartEncoder(
             fields={
                 'name': name,
@@ -54,7 +58,9 @@ class Petfriends:
             result = res.text
         return status, result
 
-    def del_pet(self,auth_key, pet_id):
+    def del_pet(self,auth_key: json, pet_id: str) -> int:
+        """Фукция принимает на вход api ключ и id питомца, которого необходимо удалить из списка.
+        На выходе фукция возвращает статус-код."""
         headers = {'auth_key': auth_key['key']}
 
         res = re.delete(self.base_url + '/api/pets/' + pet_id, headers=headers)
@@ -62,7 +68,9 @@ class Petfriends:
 
         return status
 
-    def update_pet_info(self, auth_key, pet_id, name, animal_type, age):
+    def update_pet_info(self, auth_key: json, pet_id: str, name: str, animal_type: str, age:str) -> json:
+        """Функция принимает на вход api ключ, id питомца, параметры которого нужно изменить, имя, тип животного и возраст.
+        Функция возвращает статус-код и словарь с новыми значениями питомца"""
         data = MultipartEncoder(
             {
                 'name': name,
@@ -81,7 +89,9 @@ class Petfriends:
             result = res.text
         return status, result
 
-    def create_pet_simple(self, auth_key: str, name: str, animal_type: str, age: str) -> json:
+    def create_pet_simple(self, auth_key: json, name: str, animal_type: str, age: str) -> json:
+        """Функция добавляет нового питомца в список питомцев на сайте, без добавления фото.
+        На выходе функуия возвращает словарь с параметрами нового питомца."""
         data = MultipartEncoder(
             {
                 'name': name,
@@ -100,7 +110,8 @@ class Petfriends:
             result = res.text
         return status, result
 
-    def update_pet_photo(self, auth_key, pet_id, pet_photo):
+    def update_pet_photo(self, auth_key: json, pet_id: str, pet_photo) -> json:
+        """Функция позволяет изменить фото питомца на сайте. Возвращает статус-код."""
         data = MultipartEncoder(
             {
                 'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg'),
@@ -115,3 +126,6 @@ class Petfriends:
         except json.decoder.JSONDecodeError:
             result = res.text
         return status, result
+
+pf =Petfriends()
+print(pf.get_api_key('solomonslava1991@gmail.com', 'solomon0204'))

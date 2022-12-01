@@ -1,13 +1,18 @@
 from api import Petfriends
 from settings import email, password
-import os
+
 
 pf = Petfriends()
 
-def test_get_api_key(email=email, password=password):
+def test_get_api_key_correct(email=email, password=password):
     status, result = pf.get_api_key(email, password)
     assert status == 200
     assert 'key' in result
+
+def test_get_api_key_filed(email='asdff@mail.ru', password='asdffa'):
+    status, result = pf.get_api_key(email, password)
+    assert status == 200
+    assert 'key' not in result
 
 def test_get_list_of_pets(filter=''):
     _, auth_key = pf.get_api_key(email=email, password=password)
