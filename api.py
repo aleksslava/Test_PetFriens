@@ -80,3 +80,38 @@ class Petfriends:
         except json.decoder.JSONDecodeError:
             result = res.text
         return status, result
+
+    def create_pet_simple(self, auth_key: str, name: str, animal_type: str, age: str) -> json:
+        data = MultipartEncoder(
+            {
+                'name': name,
+                'animal_type': animal_type,
+                'age': age,
+            }
+        )
+
+        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
+        res = re.post(self.base_url + '/api/create_pet_simple', headers=headers, data=data)
+        status = res.status_code
+        result = ''
+        try:
+            result = res.json()
+        except json.decoder.JSONDecodeError:
+            result = res.text
+        return status, result
+
+    def update_pet_photo(self, auth_key, pet_id, pet_photo):
+        data = MultipartEncoder(
+            {
+                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg'),
+            }
+        )
+        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
+        res = re.post(self.base_url + '/api/pets/set_photo/' + pet_id, headers=headers, data=data)
+        status = res.status_code
+        result = ''
+        try:
+            result = res.json()
+        except json.decoder.JSONDecodeError:
+            result = res.text
+        return status, result

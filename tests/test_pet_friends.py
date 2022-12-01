@@ -47,3 +47,17 @@ def test_update_pet_info_correct(name='lion', animal_type='bear', age='3'):
         assert result['animal_type'] == animal_type
     else:
         raise Exception('There is no my pets')
+
+def test_create_pet_simple(name='laizi', animal_type='dog', age='5'):
+    _, auth_key = pf.get_api_key(email, password)
+    status, result = pf.create_pet_simple(auth_key, name, animal_type, age)
+    assert status == 200
+    assert result['name'] == name
+
+def test_update_pet_photo_correct(pet_photo='images/britanskaya.jpg'):
+    _, auth_key = pf.get_api_key(email, password)
+    _, my_pet_list = pf.get_list_of_pets(auth_key, filter='my_pets')
+    pet_id = my_pet_list['pets'][-1]['id']
+    status, result = pf.update_pet_photo(auth_key, pet_id, pet_photo)
+    assert status == 200
+
