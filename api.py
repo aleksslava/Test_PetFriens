@@ -127,5 +127,44 @@ class Petfriends:
             result = res.text
         return status, result
 
-pf =Petfriends()
-print(pf.get_api_key('solomonslava1991@gmail.com', 'solomon0204'))
+    def add_new_pet_without_animal_type(self, auth_key: json, name: str, age: str, pet_photo: str) -> json:
+        """Функция принимает на вход параметры нового питомца и добавляет новую запись в список питомцев.
+        На выходе фукция возвращает статус-код и словарь со значениями нового питомца."""
+        data = MultipartEncoder(
+            fields={
+                'name': name,
+                'age': age,
+                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg')
+            }
+        )
+        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
+
+        res = re.post(self.base_url + '/api/pets', headers=headers, data=data)
+        status = res.status_code
+        result = ''
+        try:
+            result = res.json()
+        except json.decoder.JSONDecodeError:
+            result = res.text
+        return status, result
+
+    def add_new_pet_without_age(self, auth_key: json, name: str, animal_type: str, pet_photo: str) -> json:
+        """Функция принимает на вход параметры нового питомца и добавляет новую запись в список питомцев.
+        На выходе фукция возвращает статус-код и словарь со значениями нового питомца."""
+        data = MultipartEncoder(
+            fields={
+                'name': name,
+                'animal_type': animal_type,
+                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg')
+            }
+        )
+        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
+
+        res = re.post(self.base_url + '/api/pets', headers=headers, data=data)
+        status = res.status_code
+        result = ''
+        try:
+            result = res.json()
+        except json.decoder.JSONDecodeError:
+            result = res.text
+        return status, result
