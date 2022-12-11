@@ -1,6 +1,7 @@
 import json.decoder
 import requests as re
 from requests_toolbelt.multipart.encoder import MultipartEncoder
+from settings import email, password
 
 
 class Petfriends:
@@ -168,3 +169,9 @@ class Petfriends:
         except json.decoder.JSONDecodeError:
             result = res.text
         return status, result
+
+
+pf = Petfriends()
+
+status, result = pf.get_api_key('asdasdas', 'asdasdasd')
+print(result)

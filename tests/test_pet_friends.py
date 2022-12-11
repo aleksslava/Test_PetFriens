@@ -24,8 +24,6 @@ def request_fixture(request):
     print(request.cls)
     print(request.module.__name__)
     print(request.fspath)
-    #with open('log.txt', 'a') as file:
-        #file.write(request.)
 
 
 @pytest.fixture(autouse=True, scope='session')
@@ -34,58 +32,6 @@ def timedelta():
     yield
     time_last = datetime.now()
     print(f'\nНа выполнение теста потребовалось: {time_last-time_old}')
-
-@pytest.mark.api
-def test_get_api_key_correct(email=email, password=password):
-    """Тест на получение auth_key с валидными email и password.
-     Результатом теста должен быть статус код 200 и ключ в фомате json."""
-    status, result = pf.get_api_key(email, password)
-    assert status == 200
-    assert 'key' in result
-
-
-@pytest.mark.api
-def test_get_api_key_incorrect_password(email=email, password='asdffa'):
-    """Тест на получение auth_key с валидным email и неверным password.
-     Результатом теста должен быть статус код 403. Ключа в ответе быть не должно."""
-    status, result = pf.get_api_key(email, password)
-    assert status == 403
-    assert 'key' not in result
-
-
-
-@pytest.mark.api
-def test_get_api_key_incorrect_email(email='asheqwr.ru', password='asdffa'):
-    """Тест на получение auth_key с неверным email и валидным password.
-     Результатом теста должен быть статус код 403. Ключа в ответе быть не должно."""
-    status, result = pf.get_api_key(email, password)
-    assert status == 403
-    assert 'key' not in result
-
-@pytest.mark.get_list
-def test_get_list_of_pets_all(get_key, filter=''):
-    """Тест на получение списка всех животных на сайте. На выходе должен быть статус код 200 и список всех
-    животных на сайте."""
-    status, result = pf.get_list_of_pets(get_key, filter)
-    assert status == 200
-    assert len(result['pets']) > 0
-
-@pytest.mark.get_list
-def test_get_list_of_pets_my_pets(get_key, filter='my_pets'):
-    """Тест на получение списка животных пользователя на сайте. На выходе должен быть статус код 200
-     и список всех животных пользователя на сайте."""
-    status, result = pf.get_list_of_pets(get_key, filter)
-    assert status == 200
-    assert len(result['pets']) > 0
-
-@pytest.mark.get_list
-def test_get_list_of_pets_all_incorrect_auth_key(filter=''):
-    """Тест на получение списка всех животных на сайте с некорректным auth_key.
-    На выходе должен быть статус код 403"""
-    auth_key = {'key': 'asafd548dsf84ds21f6ds8'}
-    status, result = pf.get_list_of_pets(auth_key, filter)
-    assert status == 403
-
 
 
 def test_add_new_pet_correct(get_key,name='storm', animal_type='cat', age='10', pet_photo='images/britanskaya.jpg'):
