@@ -1,6 +1,6 @@
 import pytest
 import uuid
-
+from selenium.webdriver import Chrome
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):
@@ -13,29 +13,14 @@ def pytest_runtest_makereport(item, call):
     return rep
 
 @pytest.fixture
-def web_browser(request, selenium):
+def web_browser():
 
-    browser = selenium
-    browser.set_window_size(1400, 1000)
+    browser = Chrome(executable_path=r'D:\skillfactory\lesson_19.7.2\tests\chromedriver.exe')
+
+    browser.implicitly_wait(5)
 
     # Return browser instance to test case:
     yield browser
 
-    # Do teardown (this code will be executed after each test):
+    browser.quit()
 
-    if request.node.rep_call.failed:
-        # Make the screen-shot if test failed:
-        try:
-            browser.execute_script("document.body.bgColor = 'white';")
-
-            # Make screen-shot for local debug:
-            browser.save_screenshot('screenshots/' + str(uuid.uuid4()) + '.png')
-
-            # For happy debugging:
-            print('URL: ', browser.current_url)
-            print('Browser logs:')
-            for log in browser.get_log('browser'):
-                print(log)
-
-        except:
-            pass # just ignore any errors here
