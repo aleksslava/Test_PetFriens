@@ -1,4 +1,4 @@
-# lesson_19.7.2
+# Test_PetFriends
 Проект по тестированию сайта "https://petfriends.skillfactory.ru"
 Для запуска тестов необходимы билиотеки Pytest, requests, json.
 В файле api.py располагается класс "Petfriends". Класс располагает всеми методами для работы с api сайта "https://petfriends.skillfactory.ru". 
